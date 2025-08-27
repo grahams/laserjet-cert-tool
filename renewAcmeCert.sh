@@ -8,12 +8,10 @@ else
     exit 1
 fi
 
-# Main
 export PATH=${PATH}:${ACME_DIR}:${BASE_DIR}
 chmod +x ${ACME_DIR}/acme.sh
 mkdir -p ${CERT_DIR}
 
-# Main
 mkdir -p ${CERT_DIR}
 
 if [ -d "$CERT_DIR" ]; then
