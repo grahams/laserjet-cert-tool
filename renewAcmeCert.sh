@@ -1,12 +1,19 @@
 #!/bin/bash
 
-# import environment 
+# import environment from .env file
 if [ -f .env ]; then
     source .env
 else
     echo ".env file does not exist.  Please see .env.example for guidance"
     exit 1
 fi
+
+export CERT_DIR=${BASE_DIR}/certs/${DOMAIN_NAME}
+export CERT_FILE=${CERT_DIR}/domain.cer
+export KEY_FILE=${CERT_DIR}/domain.key
+export CA_FILE=${CERT_DIR}/ca.cer
+export PFX_FILE=${CERT_DIR}/certificate.pfx
+export FULLCHAIN_FILE=${CERT_DIR}/fullchain.cer
 
 export PATH=${PATH}:${ACME_DIR}:${BASE_DIR}
 chmod +x ${ACME_DIR}/acme.sh
@@ -19,7 +26,7 @@ if [ -d "$CERT_DIR" ]; then
     acme.sh --renew -d ${DOMAIN_NAME}
 else
     # Issue new certificate
-    acme.sh --issue -k 4096 -ak 4096 --server letsencrypt --force --dns ${ACME_DEPLOY_HOOK} --cert-file "${CERT_FILE}" --key-file "${KEY_FILE}" --ca-file "${CA_FILE}" --fullchain-file "${FULLCHAIN_FILE}" -d ${DOMAIN_NAME}
+    acme.sh --issue -k 4096 -ak 4096 --server letsencrypt --force --dns ${ACME_DNSAPI_PLUGIN} --cert-file "${CERT_FILE}" --key-file "${KEY_FILE}" --ca-file "${CA_FILE}" --fullchain-file "${FULLCHAIN_FILE}" -d ${DOMAIN_NAME}
 fi
 
 # Package certificate
